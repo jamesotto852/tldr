@@ -11,6 +11,8 @@ RdTags <- get("RdTags", asNamespace("tools"))
 Rd2tldr <- function(Rd, package) {
   top_level_tags <- RdTags(Rd)
 
+  type <- if ("\\docType" %in% top_level_tags) Rd[[which(top_level_tags == "\\docType")]] else "function"
+
   name <- Rd[[which(top_level_tags == "\\name")]]
   title <- Rd[[which(top_level_tags == "\\title")]]
 
@@ -19,7 +21,7 @@ Rd2tldr <- function(Rd, package) {
   details <- if ("\\details" %in% top_level_tags) Rd[[which(top_level_tags == "\\details")]] else NULL
 
   Rd2tldr_name(name)
-  Rd2tldr_aliases(aliases, package)
+  Rd2tldr_aliases(aliases, type, package)
   Rd2tldr_title(title)
 
   if (!is.null(arguments)) Rd2tldr_arguments(arguments)
@@ -37,9 +39,9 @@ Rd2tldr_name <- function(Rd) {
   cli_h1(Rd)
 }
 
-Rd2tldr_aliases <- function(Rd, package) {
+Rd2tldr_aliases <- function(Rd, type, package) {
   aliases <- unlist(Rd)
-  aliases <- paste0(aliases, "()")
+  if (type == "function") aliases <- paste0(aliases, "()")
   aliases <- paste(package, aliases, sep = "::", collapse = ", ")
 
   cli_text(aliases)
