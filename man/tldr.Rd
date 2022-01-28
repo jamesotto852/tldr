@@ -19,5 +19,4 @@ Similar to \verb{?} and \code{help()}
 tldr(tldr)
 tldr("tldr")
 tldr(palmerpenguins::penguins)
-
 }

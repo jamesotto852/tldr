@@ -17,9 +17,20 @@ tldr <- function(topic) {
   topicExpr <- substitute(topic)
   package <- NULL
 
-  if (is.call(topicExpr) && (topicExpr[[1L]] == "::" || topicExpr[[1L]] == ":::")) {
-    package <- as.character(topicExpr[[2L]])
-    topicExpr <- topicExpr[[3L]]
+  if (is.call(topicExpr)) {
+    if (topicExpr[[1L]] == "::" || topicExpr[[1L]] == ":::") {
+      package <- as.character(topicExpr[[2L]])
+      topicExpr <- topicExpr[[3L]]
+    } else {
+      # an attempt at parsing input like tldr(tldr())
+      topicExpr <- topicExpr[[1L]]
+
+      # REALLY abusing short circuit here:
+      if (!is.symbol(topicExpr) && (topicExpr[[1L]] == "::" || topicExpr[[1L]] == ":::")) {
+        package <- as.character(topicExpr[[2L]])
+        topicExpr <- topicExpr[[3L]]
+      }
+    }
   }
 
   # Accept either name or string specifying topic
