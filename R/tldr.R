@@ -11,11 +11,11 @@
 #' tldr(tldr)
 #' tldr("tldr")
 #' tldr(palmerpenguins::penguins)
-#'
 tldr <- function(topic) {
   # Right now, doing everything with substitute + eval
   # Would rather do w/ newer tools
   topicExpr <- substitute(topic)
+  package <- NULL
 
   if (is.call(topicExpr) && (topicExpr[[1L]] == "::" || topicExpr[[1L]] == ":::")) {
     package <- as.character(topicExpr[[2L]])
@@ -24,7 +24,8 @@ tldr <- function(topic) {
 
   # Accept either name or string specifying topic
   topic <- if (is.name(topicExpr)) as.character(topicExpr) else topic
-  package <- NULL
+
+  package <- if (is.null(package)) tldr_package(topic)
 
   invisible(eval(substitute(tldr_help(TOPIC, package = PACKAGE),
                          list(TOPIC = topic, PACKAGE = package))))
@@ -36,17 +37,25 @@ tldr_path <- function(path, topic) {
   file.path(path, "man_tldr", paste0(topic, ".Rd"))
 }
 
-tldr_exists <- function(path, topic) file.exists(tldr_path(path, topic))
 
 tldr_help <- function(topic, package) {
-  dirs <- if (is.null(package)) find.package(loadedNamespaces()) else find.package(package)
+  package <- if (is.null(package)) tldr_package(topic) else package
+  dir <- find.package(package)
+
+  Rd <- tldr_path(dir, topic)
+  Rd <- tools::parse_Rd(Rd)
+  Rd2tldr(Rd, package)
+}
+
+tldr_package <- function(topic) {
+  dirs <- find.package(loadedNamespaces())
   hits <- vapply(dirs, tldr_exists, logical(1), topic)
 
   if (all(!hits)) stop("Topic not found")
+  # Need a better way to pick the directory if multiple hits
+  dir <- dirs[min(which(hits))]
 
-  Rd <- tldr_path(dirs[min(which(hits))], topic)
-  Rd <- tools::parse_Rd(Rd)
-  Rd2tldr(Rd)
+  regmatches(dir, regexpr("[^(/|\\)]*$", dir))
 }
 
-
+tldr_exists <- function(path, topic) file.exists(tldr_path(path, topic))

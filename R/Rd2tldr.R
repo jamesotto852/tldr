@@ -7,20 +7,26 @@ NULL
 
 RdTags <- get("RdTags", asNamespace("tools"))
 
-Rd2tldr <- function(Rd) {
 
-  if (is.list(Rd) && is.null(attr(Rd, "Rd_tag"))) {
-    return(invisible(lapply(Rd, Rd2tldr)))
-  }
+Rd2tldr <- function(Rd, package) {
+  top_level_tags <- RdTags(Rd)
 
-  if (attr(Rd, "Rd_tag") == "\\name") Rd2tldr_name(Rd)
-  if (attr(Rd, "Rd_tag") == "\\title") Rd2tldr_title(Rd)
+  name <- Rd[[which(top_level_tags == "\\name")]]
+  title <- Rd[[which(top_level_tags == "\\title")]]
 
-  if (attr(Rd, "Rd_tag") == "\\arguments") Rd2tldr_arguments(Rd)
-  if (attr(Rd, "Rd_tag") == "\\details") Rd2tldr_details(Rd)
+  aliases <- if ("\\alias" %in% top_level_tags) Rd[which(top_level_tags == "\\alias")] else NULL
+  arguments <- if ("\\arguments" %in% top_level_tags) Rd[[which(top_level_tags == "\\arguments")]] else NULL
+  details <- if ("\\details" %in% top_level_tags) Rd[[which(top_level_tags == "\\details")]] else NULL
 
+  Rd2tldr_name(name)
+  Rd2tldr_aliases(aliases, package)
+  Rd2tldr_title(title)
+
+  if (!is.null(arguments)) Rd2tldr_arguments(arguments)
+  if (!is.null(details)) Rd2tldr_details(details)
+
+  invisible(NULL)
 }
-
 
 ### helper functions to work on elements of parsed Rd:
 
@@ -29,6 +35,14 @@ Rd2tldr <- function(Rd) {
 
 Rd2tldr_name <- function(Rd) {
   cli_h1(Rd)
+}
+
+Rd2tldr_aliases <- function(Rd, package) {
+  aliases <- unlist(Rd)
+  aliases <- paste0(aliases, "()")
+  aliases <- paste(package, aliases, sep = "::", collapse = ", ")
+
+  cli_text(aliases)
 }
 
 Rd2tldr_title <- function(Rd) {
