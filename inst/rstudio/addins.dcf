@@ -1,0 +1,9 @@
+Name: tldr selection
+Description: Executes `tldr()` for selected function
+Binding: tldr_selection_addin
+Interactive: false
+
+Name: tldr input
+Description: Input topic for `tldr()` documentation
+Binding: tldr_input_addin
+Interactive: true

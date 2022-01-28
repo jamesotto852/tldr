@@ -19,4 +19,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports:
     cli,
-    crayon
+    crayon,
+    rstudioapi,
+    shiny,
+    miniUI
