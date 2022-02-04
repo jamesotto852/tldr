@@ -3,6 +3,12 @@
 #' Similar to `?` and `help()`
 #'
 #' @param topic A name or character string specifying documentation goal
+#' @paramtldr topic A name or character string specifying documentation goal
+#'
+#' @exampletldr Several ways to bring up documentation on a topic:
+#' \code{tldr(tldr)}
+#' \code{tldr('tldr')}
+#' \code{tldr(tldr::tldr)}
 #'
 #' @return
 #' @export
