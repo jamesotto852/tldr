@@ -43,9 +43,9 @@ tldr <- function(topic) {
 }
 
 tldr_path <- function(path, topic) {
-  # looking in PKG/man_tldr/ for files w/ the name topic.Rd
-  # Before package installation, they hang out in /inst/man_tldr/
-  file.path(path, "man_tldr", paste0(topic, ".Rd"))
+  # looking in PKG/tldr/ for files w/ the name topic.Rd
+  # Before package installation, they hang out in /inst/tldr/
+  file.path(path, "tldr", paste0(topic, ".Rd"))
 }
 
 
