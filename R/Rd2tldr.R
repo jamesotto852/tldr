@@ -93,8 +93,6 @@ Rd2tldr_details <- function(Rd) {
   cli_text()
 }
 
-# Rd2tldr_details(Rd[[13]])
-
 # Deal with individual items in the details tag
 Rd2tldr_details_item <- function(Rd) {
 
