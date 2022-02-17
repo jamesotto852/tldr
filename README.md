@@ -35,6 +35,19 @@ package,
 which exports several simple functions with Roxygen skeletons that
 produce **tldr** documentation.
 
+## How it works
+
+`tldr_roclet()` creates .Rd files based on relevant tags in the Roxygen
+skeleton (including the new `@paramtldr` and `@exampletldr`). These .Rd
+files are written to the `/inst/tldr/` directory. Once the package is
+installed, `tldr_help()` and `tldr_package()` are able to find the
+relevant files which are turned into console output by `tldr()`.
+
+This process is inspired by the `help()` function—for those who are
+interested, I have a
+<a href="https://jamesotto852.github.io/Understanding-base-documentation-functions">blog
+post</a> in which I go through how `?` and `help()` work in detail.
+
 ## Installation
 
 **tldr** is in an experimental stage and is not ready to be used as a
