@@ -6,25 +6,33 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of tldr is to provide short-form documentation in the console:
+The goal of **tldr** is to provide short-form documentation in the
+console, styled with
+<a href = "https://github.com/r-lib/cli">**cli**</a>:
 
 ![tldr-ex-1](man/README-gifs/tldr-tldr.gif)
 
 Included are RStudio addins which, when bound to keyboard shortcuts,
-facilitate efficient access to **tldr** style documentation:
+facilitate efficient access to **tldr** documentation:
 
 ![tldr-ex-2](man/README-gifs/tldrExample-divide.gif)
 
-# Writing **tldr** documentation
+**tldr** is inspired by <a href="https://tldr.sh/">tldr-pages</a>, a
+project which provides simpler documentation for command-line tools.
+
+## Writing **tldr** documentation
 
 This package includes a Roxygen2 extension which allows for the creation
 of **tldr** documentation files from Roxygen skeletons. This is done via
 `tldr_roclet()` and custom Roxygen tags `@paramtldr` and `@exampletldr`.
-Once the system for documentation is more stable, we will be writing a
-guide on its use for other developers. For an example of what a package
-with **tldr**-style documentation looks like, there is another package,
+Right now, the implementation of the extension is located in
+`/inst/roxygen-ext/roxygen-extension.R`—it is not currently being
+exported. Once the system for documentation is more stable, we will be
+writing a guide on its use for other developers. For an example of what
+a package with **tldr**-style documentation looks like, there is another
+package,
 <a href="https://Github.com/jamesotto852/tldrExample">**tldrExample**</a>,
-which exports several simple functions, with Roxygen skeletons that
+which exports several simple functions with Roxygen skeletons that
 produce **tldr** documentation.
 
 ## Installation
