@@ -7,6 +7,7 @@ tldr_selection_addin <- function() {
 }
 
 tldr_roxygenize_addin <- function() {
+  library("tldr")
   rstudioapi::sendToConsole('roxygen2::roxygenize(roclets = c("rd", "namespace", "collate", "tldr_roclet"))', execute = TRUE, focus = FALSE)
 }
 
