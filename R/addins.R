@@ -6,6 +6,9 @@ tldr_selection_addin <- function() {
   rstudioapi::sendToConsole(paste0("tldr::tldr(", selection, ")"), execute = TRUE, focus = FALSE)
 }
 
+tldr_roxygenize_addin <- function() {
+  rstudioapi::sendToConsole('roxygen2::roxygenize(roclets = c("rd", "tldr_roclet", "namespace", "collate"))', execute = TRUE, focus = FALSE)
+}
 
 # Very bare-bones miniUI shiny app
 # To-Do: Theming, change size

@@ -7,3 +7,8 @@ Name: tldr input
 Description: Input topic for `tldr()` documentation
 Binding: tldr_input_addin
 Interactive: true
+
+Name: tldr roxygenize
+Description: run `roxygen2::roxygenize(roclets = c("rd", "tldr_roclet", "namespace", "collate"))`
+Binding: tldr_roxygenize_addin
+Interactive: false
