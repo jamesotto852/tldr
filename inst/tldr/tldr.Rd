@@ -3,7 +3,7 @@
 \alias{tldr}
 \title{Short form, tl;dr style documentation in the console}
 \arguments{
-  \item{topic}{A name or character string specifying documentation goal
+  \item{topic}{A name or character string specifying documentation topic
 }
 }
 

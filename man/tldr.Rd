@@ -7,7 +7,7 @@
 tldr(topic)
 }
 \arguments{
-\item{topic}{A name or character string specifying documentation goal}
+\item{topic}{A name or character string specifying documentation topic}
 }
 \value{
 

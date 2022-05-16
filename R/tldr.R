@@ -2,8 +2,8 @@
 #'
 #' Similar to `?` and `help()`
 #'
-#' @param topic A name or character string specifying documentation goal
-#' @paramtldr topic A name or character string specifying documentation goal
+#' @param topic A name or character string specifying documentation topic
+#' @paramtldr topic A name or character string specifying documentation topic
 #'
 #' @exampletldr Several ways to bring up documentation on a topic:
 #' \code{tldr(tldr)}
