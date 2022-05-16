@@ -229,9 +229,14 @@ roclet_clean.roclet_tldr <- function(x, base_path) {
 roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FALSE) {
   man <- normalizePath(file.path(base_path, "inst", "tldr"))
   contents <- vapply(results, format, character(1))
-  # TODO
-  # Want to write a file for each alias, need to alter this slightly
-  paths <- file.path(man, names(results))
+
+  # Write a file for each alias, repeating contents when necessary
+  aliases <- get_aliases(contents)
+  aliases_count <- vapply(aliases, length, numeric(1))
+  contents <- rep(contents, aliases_count)
+  aliases <- unlist(aliases)
+
+  paths <- file.path(man, paste0(aliases, ".Rd"))
   mapply(roxygen2:::write_if_different, paths, contents, MoreArgs = list(check = TRUE))
 
   if (!is_first) {
@@ -245,5 +250,12 @@ roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FAL
     }
   }
   paths
+}
+
+# Helper fun to find aliases via regexp
+# potential to fail if aliases contain `}`
+get_aliases <- function(vec) {
+  if (length(vec) > 1) return(lapply(vec, get_aliases))
+  regmatches(vec, gregexpr("(?<=\\\\alias\\{).*(?=\\})", vec, perl = TRUE))[[1]]
 }
 
