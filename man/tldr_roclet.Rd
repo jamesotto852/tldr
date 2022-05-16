@@ -7,16 +7,19 @@
 \alias{roxy_tag_rd_tldr.roxy_tag_paramtldr}
 \alias{roxy_tag_rd.roxy_tag_exampletldr}
 \alias{roxy_tag_rd_tldr.roxy_tag_exampletldr}
+\alias{roxy_tag_rd.roxy_tag_ignoretldr}
 \alias{block_to_rd_tldr}
 \alias{block_to_rd_tldr.roxy_block}
 \alias{roxy_tag_parse.roxy_tag_paramtldr}
 \alias{format.rd_section_paramtldr}
 \alias{roxy_tag_parse.roxy_tag_exampletldr}
 \alias{format.rd_section_exampletldr}
+\alias{roxy_tag_parse.roxy_tag_ignoretldr}
+\alias{format.rd_section_ignoretldr}
 \alias{roclet_process.roclet_tldr}
 \alias{roclet_clean.roclet_tldr}
 \alias{roclet_output.roclet_tldr}
-\title{TEMP TITLE}
+\title{Roxygen2 extensions}
 \usage{
 roxy_tag_rd_tldr(x, base_path, env)
 
@@ -27,6 +30,8 @@ roxy_tag_rd_tldr(x, base_path, env)
 \method{roxy_tag_rd}{roxy_tag_exampletldr}(x, base_path, env)
 
 \method{roxy_tag_rd_tldr}{roxy_tag_exampletldr}(x, base_path, env)
+
+\method{roxy_tag_rd}{roxy_tag_ignoretldr}(x, base_path, env)
 
 block_to_rd_tldr(block, base_path, env)
 
@@ -40,6 +45,10 @@ block_to_rd_tldr(block, base_path, env)
 
 \method{format}{rd_section_exampletldr}(x, ...)
 
+\method{roxy_tag_parse}{roxy_tag_ignoretldr}(x)
+
+\method{format}{rd_section_exampletldr}(x, ...)
+
 tldr_roclet()
 
 \method{roclet_process}{roclet_tldr}(x, blocks, env, base_path)
@@ -49,5 +58,5 @@ tldr_roclet()
 \method{roclet_output}{roclet_tldr}(x, results, base_path, ..., is_first = FALSE)
 }
 \description{
-roxygen2 extension facilitating documenting via roxygen2::roxygenize(roclets = c("rd", "tldr_roclet"))
+roxygen2 extension code facilitating documenting via roxygen2::roxygenize(roclets = c("tldr_roclet"))
 }

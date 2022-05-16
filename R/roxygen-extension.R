@@ -1,9 +1,10 @@
-#' TEMP TITLE
+#' Roxygen2 extensions
 #'
-#' roxygen2 extension facilitating documenting via roxygen2::roxygenize(roclets = c("rd", "tldr_roclet"))
+#' roxygen2 extension code facilitating documenting via roxygen2::roxygenize(roclets = c("tldr_roclet"))
 #'
 #' @name tldr_roclet
 #' @rdname tldr_roclet
+#' @ignoretldr
 NULL
 # Right now, all files exported under same topic: "tldr_roclet"
 # probably not the right thing to do
@@ -63,6 +64,17 @@ roxy_tag_rd_tldr.roxy_tag_exampletldr <- function(x, base_path, env) {
   roxygen2::rd_section("exampletldr", x$val)
 }
 
+# ignore
+#' @rdname tldr_roclet
+#' @method roxy_tag_rd roxy_tag_ignoretldr
+#' @export
+roxy_tag_rd.roxy_tag_ignoretldr <- function(x, base_path, env) {
+  NULL
+}
+roxy_tag_rd_tldr.roxy_tag_ignoretldr <- function(x, base_path, env) {
+  roxygen2::rd_section("ignoretldr", x$val)
+}
+
 
 
 # tldr version of roxygen2:::block_to_rd.roxy_block
@@ -81,8 +93,6 @@ block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
   if (!roxygen2:::needs_doc(block)) {
     return()
   }
-  # TODO -- probably warning here when seeing "Missing name"
-  #      -- b/c of inheriting via @rdname?
   name <- roxygen2::block_get_tag(block, "name")$val %||% block$object$topic
   if (is.null(name)) {
     roxygen2::roxy_tag_warning(block$tags[[1]], "Missing name")
@@ -118,7 +128,6 @@ roxy_tag_parse.roxy_tag_paramtldr <- function(x) {
 
   x
 }
-
 #' @rdname tldr_roclet
 #' @method format rd_section_paramtldr
 #' @export
@@ -155,7 +164,6 @@ roxy_tag_parse.roxy_tag_exampletldr <- function(x) {
 
   x
 }
-
 #' @rdname tldr_roclet
 #' @method format rd_section_exampletldr
 #' @export
@@ -165,6 +173,21 @@ format.rd_section_exampletldr <- function(x, ...) {
     paste0(x$value, collapse = "\n"),
     "}\n"
   )
+}
+
+# Set up tldr ignore tag:
+#' @rdname tldr_roclet
+#' @method roxy_tag_parse roxy_tag_ignoretldr
+#' @export
+roxy_tag_parse.roxy_tag_ignoretldr <- function(x) {
+  x
+}
+#' @rdname tldr_roclet
+#' @method format rd_section_exampletldr
+#' @export
+format.rd_section_ignoretldr <- function(x, ...) {
+  # roclet_output() avoids writing files w/ this tag in their contents
+  "\\ignoretldr\n"
 }
 
 
@@ -190,7 +213,7 @@ roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
 
     # Find all tags relevant to tldr:
     # tldr_tags <- c("title", "alias", "docType", "exampletldr", "paramtldr")
-    tldr_tags <- c("name", "rdname", "title", "alias", "docType", "exampletldr", "paramtldr")
+    tldr_tags <- c("name", "rdname", "title", "alias", "docType", "exampletldr", "paramtldr", "ignoretldr")
     relevant_tags <- vapply(block$tags, function(x) x$tag %in% tldr_tags, logical(1))
 
     block$tags <- block$tags[relevant_tags]
@@ -229,6 +252,9 @@ roclet_clean.roclet_tldr <- function(x, base_path) {
 roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FALSE) {
   man <- normalizePath(file.path(base_path, "inst", "tldr"))
   contents <- vapply(results, format, character(1))
+
+  # Throw out entries w/ @ignoretldr tag
+  contents <- grep("\\ignoretldr", contents, value = TRUE, invert = TRUE)
 
   # Write a file for each alias, repeating contents when necessary
   aliases <- get_aliases(contents)
