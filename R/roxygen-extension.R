@@ -48,6 +48,7 @@ roxy_tag_rd.roxy_tag_paramtldr <- function(x, base_path, env) {
 roxy_tag_rd_tldr.roxy_tag_paramtldr <- function(x, base_path, env) {
   roxygen2::rd_section("paramtldr", x$val)
 }
+
 # details
 #' @rdname tldr_roclet
 #' @method roxy_tag_rd roxy_tag_exampletldr
@@ -80,6 +81,8 @@ block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
   if (!roxygen2:::needs_doc(block)) {
     return()
   }
+  # TODO -- probably warning here when seeing "Missing name"
+  #      -- b/c of inheriting via @rdname?
   name <- roxygen2::block_get_tag(block, "name")$val %||% block$object$topic
   if (is.null(name)) {
     roxygen2::roxy_tag_warning(block$tags[[1]], "Missing name")
@@ -88,7 +91,7 @@ block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
   rd <- roxygen2:::RoxyTopic$new()
   roxygen2:::topic_add_name_aliases(rd, block, name)
   for (tag in block$tags) {
-    rd$add(roxy_tag_rd_tldr(tag, env = env, base_path = base_path))
+    if (!(tag$tag %in% c("name", "rdname"))) rd$add(roxy_tag_rd_tldr(tag, env = env, base_path = base_path))
   }
   describe_rdname <- roxygen2:::topic_add_describe_in(rd, block, env)
   filename <- describe_rdname %||% roxygen2::block_get_tag(block, "rdname")$val %||%
@@ -186,7 +189,8 @@ roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
   for (block in blocks) {
 
     # Find all tags relevant to tldr:
-    tldr_tags <- c("title", "alias", "docType", "exampletldr", "paramtldr")
+    # tldr_tags <- c("title", "alias", "docType", "exampletldr", "paramtldr")
+    tldr_tags <- c("name", "rdname", "title", "alias", "docType", "exampletldr", "paramtldr")
     relevant_tags <- vapply(block$tags, function(x) x$tag %in% tldr_tags, logical(1))
 
     block$tags <- block$tags[relevant_tags]
@@ -197,6 +201,12 @@ roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
     topics$add(rd)
 
   }
+
+  # topics_process_family(topics, env)
+  # topics_process_inherit(topics, env)
+  # topics$drop_invalid()
+  # topics_fix_params_order(topics)
+  # topics_add_default_description(topics)
 
   topics$topics
 }
