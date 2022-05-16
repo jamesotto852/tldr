@@ -1,5 +1,5 @@
 #' @import cli
-#' @import crayon
+#' @importFrom crayon blue
 NULL
 
 # this script contains unexported functions which deal with
