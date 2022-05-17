@@ -24,16 +24,14 @@ project which provides simpler documentation for command-line tools.
 
 This package includes a Roxygen2 extension which allows for the creation
 of **tldr** documentation files from Roxygen skeletons. This is done via
-`tldr_roclet()` and custom Roxygen tags `@paramtldr` and `@exampletldr`.
-Right now, the implementation of the extension is located in
-`/inst/roxygen-ext/roxygen-extension.R`—it is not currently being
-exported. Once the system for documentation is more stable, we will be
-writing a guide on its use for other developers. For an example of what
-a package with **tldr**-style documentation looks like, there is another
-package,
+`tldr_roclet()` and custom Roxygen tags such as `@paramtldr` and
+`@exampletldr`. Once the system for documentation is more stable, we
+will be writing a guide on its use for other developers. For an example
+of what a package with **tldr**-style documentation looks like, there is
+another package,
 <a href="https://Github.com/jamesotto852/tldrExample">**tldrExample**</a>,
-which exports several simple functions with Roxygen skeletons that
-produce **tldr** documentation.
+which exports several simple objects with Roxygen skeletons that produce
+**tldr** documentation.
 
 ## How it works
 
