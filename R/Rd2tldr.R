@@ -97,9 +97,10 @@ Rd2tldr_details <- function(Rd) {
 Rd2tldr_details_item <- function(Rd) {
 
   # Lots of cases, depends on Rd_tag:
+  # Could add support for markup style `code`
   switch(attr(Rd, "Rd_tag"),
-         "TEXT" = Rd2tldr_details_item_text(Rd),
-         "\\code" = Rd2tldr_details_item_code(Rd),
+    "TEXT" = Rd2tldr_details_item_text(Rd),
+    "\\code" = Rd2tldr_details_item_code(Rd),
   )
 
 }
