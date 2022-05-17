@@ -138,7 +138,7 @@ Rd2tldr_format <- function(Rd) {
   if (nchar(desc) == 0) {
     cli_li("Data Format:")
   } else {
-    cli_li("Data Format: ({desc})")
+    cli_li(desc)
   }
 
   ul <- cli_ul()
