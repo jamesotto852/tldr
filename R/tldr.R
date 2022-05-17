@@ -18,8 +18,6 @@
 #' tldr("tldr")
 #' tldr(palmerpenguins::penguins)
 tldr <- function(topic) {
-  # Right now, doing everything with substitute + eval
-  # Would rather do w/ newer tools
   topicExpr <- substitute(topic)
   package <- NULL
 

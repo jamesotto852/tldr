@@ -19,6 +19,7 @@ Rd2tldr <- function(Rd, package) {
   aliases <- if ("\\alias" %in% top_level_tags) Rd[which(top_level_tags == "\\alias")] else NULL
   arguments <- if ("\\arguments" %in% top_level_tags) Rd[[which(top_level_tags == "\\arguments")]] else NULL
   details <- if ("\\details" %in% top_level_tags) Rd[[which(top_level_tags == "\\details")]] else NULL
+  format <- if ("\\format" %in% top_level_tags) Rd[[which(top_level_tags == "\\format")]] else NULL
 
   Rd2tldr_name(name)
   Rd2tldr_aliases(aliases, type, package)
@@ -26,6 +27,7 @@ Rd2tldr <- function(Rd, package) {
 
   if (!is.null(arguments)) Rd2tldr_arguments(arguments)
   if (!is.null(details)) Rd2tldr_details(details)
+  if (!is.null(format)) Rd2tldr_format(format)
 
   invisible(NULL)
 }
@@ -114,3 +116,44 @@ Rd2tldr_details_item_code <- function(Rd) {
   Rd <- paste0("    ", Rd[[1]])
   cli_code(Rd)
 }
+
+
+
+## deal with format tag
+Rd2tldr_format <- function(Rd) {
+
+  # First, get text description
+  chars <- vapply(Rd, is.character, logical(1))
+  desc <- paste0(Rd[chars], collapse = "")
+  desc <- gsub("\\n", "", desc)
+
+  # Getting \describe{}
+  describe_index <- min(which(vapply(Rd, function(x) attr(x, "Rd_tag"), "character") == "\\describe"))
+  Rd <- Rd[[describe_index]]
+
+  # Getting \item elements
+  item_indeces <- which(vapply(Rd, function(x) attr(x, "Rd_tag"), "character") == "\\item")
+  Rd <- Rd[item_indeces]
+
+  if (nchar(desc) == 0) {
+    cli_li("Data Format:")
+  } else {
+    cli_li("Data Format: ({desc})")
+  }
+
+  ul <- cli_ul()
+  lapply(Rd, Rd2tldr_format_item)
+  cli_end(ul)
+
+  cli_text()
+}
+
+Rd2tldr_format_item <- function(Rd) {
+  item <- Rd[[1]]
+  desc <- Rd[[2]]
+
+  cli_li("{blue(item)}: {desc}")
+}
+
+
+

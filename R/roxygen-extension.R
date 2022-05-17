@@ -64,6 +64,20 @@ roxy_tag_rd_tldr.roxy_tag_exampletldr <- function(x, base_path, env) {
   roxygen2::rd_section("exampletldr", x$val)
 }
 
+# format
+#' @rdname tldr_roclet
+#' @method roxy_tag_rd roxy_tag_formattldr
+#' @export
+roxy_tag_rd.roxy_tag_formattldr <- function(x, base_path, env) {
+  NULL
+}
+#' @rdname tldr_roclet
+#' @method roxy_tag_rd_tldr roxy_tag_formattldr
+#' @export
+roxy_tag_rd_tldr.roxy_tag_formattldr <- function(x, base_path, env) {
+  roxygen2::rd_section("formattldr", x$val)
+}
+
 # ignore
 #' @rdname tldr_roclet
 #' @method roxy_tag_rd roxy_tag_ignoretldr
@@ -185,6 +199,26 @@ format.rd_section_exampletldr <- function(x, ...) {
   )
 }
 
+# Set up tldr format tag:
+#' @rdname tldr_roclet
+#' @method roxy_tag_parse roxy_tag_formattldr
+#' @export
+roxy_tag_parse.roxy_tag_formattldr <- function(x) {
+  x$val <- x$raw
+
+  x
+}
+#' @rdname tldr_roclet
+#' @method format rd_section_formattldr
+#' @export
+format.rd_section_formattldr <- function(x, ...) {
+  paste0(
+    "\\format{\n",
+    paste0(x$value, collapse = "\n"),
+    "}\n"
+  )
+}
+
 # Set up tldr ignore tag:
 #' @rdname tldr_roclet
 #' @method roxy_tag_parse roxy_tag_ignoretldr
@@ -226,7 +260,7 @@ roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
 
     # Find all tags relevant to tldr:
     # tldr_tags <- c("title", "alias", "docType", "exampletldr", "paramtldr")
-    tldr_tags <- c("name", "rdname", "title", "alias", "docType", "exampletldr", "paramtldr", "ignoretldr")
+    tldr_tags <- c("name", "rdname", "title", "alias", "docType", "exampletldr",  "paramtldr", "formattldr", "ignoretldr")
     relevant_tags <- vapply(block$tags, function(x) x$tag %in% tldr_tags, logical(1))
 
     block$tags <- block$tags[relevant_tags]
@@ -238,6 +272,7 @@ roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
 
   }
 
+  # Not using any of this from roxygen2:
   # topics_process_family(topics, env)
   # topics_process_inherit(topics, env)
   # topics$drop_invalid()

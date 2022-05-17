@@ -7,6 +7,8 @@
 \alias{roxy_tag_rd_tldr.roxy_tag_paramtldr}
 \alias{roxy_tag_rd.roxy_tag_exampletldr}
 \alias{roxy_tag_rd_tldr.roxy_tag_exampletldr}
+\alias{roxy_tag_rd.roxy_tag_formattldr}
+\alias{roxy_tag_rd_tldr.roxy_tag_formattldr}
 \alias{roxy_tag_rd.roxy_tag_ignoretldr}
 \alias{roxy_tag_rd_tldr.roxy_tag_ignoretldr}
 \alias{block_to_rd_tldr}
@@ -15,6 +17,8 @@
 \alias{format.rd_section_paramtldr}
 \alias{roxy_tag_parse.roxy_tag_exampletldr}
 \alias{format.rd_section_exampletldr}
+\alias{roxy_tag_parse.roxy_tag_formattldr}
+\alias{format.rd_section_formattldr}
 \alias{roxy_tag_parse.roxy_tag_ignoretldr}
 \alias{format.rd_section_ignoretldr}
 \alias{roclet_process.roclet_tldr}
@@ -32,6 +36,10 @@ roxy_tag_rd_tldr(x, base_path, env)
 
 \method{roxy_tag_rd_tldr}{roxy_tag_exampletldr}(x, base_path, env)
 
+\method{roxy_tag_rd}{roxy_tag_formattldr}(x, base_path, env)
+
+\method{roxy_tag_rd_tldr}{roxy_tag_formattldr}(x, base_path, env)
+
 \method{roxy_tag_rd}{roxy_tag_ignoretldr}(x, base_path, env)
 
 \method{roxy_tag_rd_tldr}{roxy_tag_ignoretldr}(x, base_path, env)
@@ -47,6 +55,10 @@ block_to_rd_tldr(block, base_path, env)
 \method{roxy_tag_parse}{roxy_tag_exampletldr}(x)
 
 \method{format}{rd_section_exampletldr}(x, ...)
+
+\method{roxy_tag_parse}{roxy_tag_formattldr}(x)
+
+\method{format}{rd_section_formattldr}(x, ...)
 
 \method{roxy_tag_parse}{roxy_tag_ignoretldr}(x)
 
