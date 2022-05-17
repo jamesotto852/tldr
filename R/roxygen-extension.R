@@ -71,6 +71,9 @@ roxy_tag_rd_tldr.roxy_tag_exampletldr <- function(x, base_path, env) {
 roxy_tag_rd.roxy_tag_ignoretldr <- function(x, base_path, env) {
   NULL
 }
+#' @rdname tldr_roclet
+#' @method roxy_tag_rd_tldr roxy_tag_ignoretldr
+#' @export
 roxy_tag_rd_tldr.roxy_tag_ignoretldr <- function(x, base_path, env) {
   roxygen2::rd_section("ignoretldr", x$val)
 }
@@ -90,9 +93,15 @@ block_to_rd_tldr <- function (block, base_path, env) {
 #' @export
 block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
   block <- roxygen2:::process_templates(block, base_path)
+
+  # Check for cases in which no docs are required
   if (!roxygen2:::needs_doc(block)) {
     return()
   }
+  # if (any(vapply(block$tags, function(x) x$tag == "ignoretldr", logical(1)))) {
+  #   return()
+  # }
+
   name <- roxygen2::block_get_tag(block, "name")$val %||% block$object$topic
   if (is.null(name)) {
     roxygen2::roxy_tag_warning(block$tags[[1]], "Missing name")
@@ -103,6 +112,7 @@ block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
   for (tag in block$tags) {
     if (!(tag$tag %in% c("name", "rdname"))) rd$add(roxy_tag_rd_tldr(tag, env = env, base_path = base_path))
   }
+  # Don't think the following 4 lines are necessary:
   describe_rdname <- roxygen2:::topic_add_describe_in(rd, block, env)
   filename <- describe_rdname %||% roxygen2::block_get_tag(block, "rdname")$val %||%
     roxygen2:::nice_name(name)
@@ -180,10 +190,13 @@ format.rd_section_exampletldr <- function(x, ...) {
 #' @method roxy_tag_parse roxy_tag_ignoretldr
 #' @export
 roxy_tag_parse.roxy_tag_ignoretldr <- function(x) {
+  # This is "parsing"
+  x$val <- x$raw
+
   x
 }
 #' @rdname tldr_roclet
-#' @method format rd_section_exampletldr
+#' @method format rd_section_ignoretldr
 #' @export
 format.rd_section_ignoretldr <- function(x, ...) {
   # roclet_output() avoids writing files w/ this tag in their contents
@@ -262,7 +275,7 @@ roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FAL
   contents <- rep(contents, aliases_count)
   aliases <- unlist(aliases)
 
-  paths <- file.path(man, paste0(aliases, ".Rd"))
+  paths <- file.path(man, paste0(aliases, ".Rd", recycle0 = TRUE))
   mapply(roxygen2:::write_if_different, paths, contents, MoreArgs = list(check = TRUE))
 
   if (!is_first) {
@@ -281,6 +294,7 @@ roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FAL
 # Helper fun to find aliases via regexp
 # potential to fail if aliases contain `}`
 get_aliases <- function(vec) {
+  if (length(vec) == 0) return(character(0))
   if (length(vec) > 1) return(lapply(vec, get_aliases))
   regmatches(vec, gregexpr("(?<=\\\\alias\\{).*(?=\\})", vec, perl = TRUE))[[1]]
 }

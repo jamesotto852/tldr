@@ -8,6 +8,7 @@
 \alias{roxy_tag_rd.roxy_tag_exampletldr}
 \alias{roxy_tag_rd_tldr.roxy_tag_exampletldr}
 \alias{roxy_tag_rd.roxy_tag_ignoretldr}
+\alias{roxy_tag_rd_tldr.roxy_tag_ignoretldr}
 \alias{block_to_rd_tldr}
 \alias{block_to_rd_tldr.roxy_block}
 \alias{roxy_tag_parse.roxy_tag_paramtldr}
@@ -33,6 +34,8 @@ roxy_tag_rd_tldr(x, base_path, env)
 
 \method{roxy_tag_rd}{roxy_tag_ignoretldr}(x, base_path, env)
 
+\method{roxy_tag_rd_tldr}{roxy_tag_ignoretldr}(x, base_path, env)
+
 block_to_rd_tldr(block, base_path, env)
 
 \method{block_to_rd_tldr}{roxy_block}(block, base_path, env)
@@ -47,7 +50,7 @@ block_to_rd_tldr(block, base_path, env)
 
 \method{roxy_tag_parse}{roxy_tag_ignoretldr}(x)
 
-\method{format}{rd_section_exampletldr}(x, ...)
+\method{format}{rd_section_ignoretldr}(x, ...)
 
 tldr_roclet()
 
