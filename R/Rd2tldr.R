@@ -143,23 +143,33 @@ Rd2tldr_format <- function(Rd) {
   desc <- paste0(Rd[chars], collapse = "")
   desc <- gsub("\\n", "", desc)
 
-  # Getting \describe{}
-  describe_index <- min(which(vapply(Rd, function(x) attr(x, "Rd_tag"), "character") == "\\describe"))
-  Rd <- Rd[[describe_index]]
+  # Getting first instance of \describe{} (if it exists)
+  describe_indeces <- which(vapply(Rd, function(x) attr(x, "Rd_tag"), "character") == "\\describe")
 
-  # Getting \item elements
-  item_indeces <- which(vapply(Rd, function(x) attr(x, "Rd_tag"), "character") == "\\item")
-  Rd <- Rd[item_indeces]
+  if (any(describe_indeces)) {
 
-  if (nchar(desc) == 0) {
-    cli_li("Data Format:")
+    Rd <- Rd[[min(describe_indeces)]]
+
+    # Getting \item elements
+    item_indeces <- which(vapply(Rd, function(x) attr(x, "Rd_tag"), "character") == "\\item")
+    Rd <- Rd[item_indeces]
+
+    if (nchar(desc) == 0) {
+      cli_li("Data Format:")
+    } else {
+      cli_li(desc)
+    }
+
+    # If there are \\item tags, deal w/ them
+    if (length(Rd) > 0) {
+      ul <- cli_ul()
+      lapply(Rd, Rd2tldr_format_item)
+      cli_end(ul)
+    }
+
   } else {
     cli_li(desc)
   }
-
-  ul <- cli_ul()
-  lapply(Rd, Rd2tldr_format_item)
-  cli_end(ul)
 
   cli_text()
 }
