@@ -55,7 +55,8 @@ Rd2tldr_aliases <- function(Rd, type, package) {
 
   }
 
-  if (type == "function") aliases <- paste0(aliases, "()")
+  if (type == "function" & package[1] != "datasets") aliases <- paste0(aliases, "()")
+
 
   aliases <- paste(package, aliases, sep = "::", collapse = ", ")
 
