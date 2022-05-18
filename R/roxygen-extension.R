@@ -124,7 +124,7 @@ block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
   rd <- roxygen2:::RoxyTopic$new()
   roxygen2:::topic_add_name_aliases(rd, block, name)
   for (tag in block$tags) {
-    if (!(tag$tag %in% c("name", "rdname"))) rd$add(roxy_tag_rd_tldr(tag, env = env, base_path = base_path))
+    if (!(tag$tag %in% c("name", "rdname", "aliases"))) rd$add(roxy_tag_rd_tldr(tag, env = env, base_path = base_path))
   }
   # Don't think the following 4 lines are necessary:
   describe_rdname <- roxygen2:::topic_add_describe_in(rd, block, env)
@@ -238,7 +238,6 @@ format.rd_section_ignoretldr <- function(x, ...) {
 }
 
 
-
 # Set up tldr_roclet
 #' @rdname tldr_roclet
 #' @export
@@ -260,7 +259,7 @@ roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
 
     # Find all tags relevant to tldr:
     # tldr_tags <- c("title", "alias", "docType", "exampletldr", "paramtldr")
-    tldr_tags <- c("name", "rdname", "title", "alias", "docType", "exampletldr",  "paramtldr", "formattldr", "ignoretldr")
+    tldr_tags <- c("name", "rdname", "title", "aliases", "docType", "exampletldr",  "paramtldr", "formattldr", "ignoretldr")
     relevant_tags <- vapply(block$tags, function(x) x$tag %in% tldr_tags, logical(1))
 
     block$tags <- block$tags[relevant_tags]
