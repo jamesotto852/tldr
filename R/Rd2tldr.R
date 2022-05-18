@@ -98,9 +98,9 @@ Rd2tldr_arguments_item <- function(Rd) {
 
 ## deal with details tag
 Rd2tldr_details <- function(Rd) {
-
-  # Only want non-newline elements
-  keep <- vapply(Rd, function(x) x != "\n", logical(1))
+  # Only want \\code + non-newline elements
+  # Mild abuse of short-circuit
+  keep <- vapply(Rd, function(x) attr(x, "Rd_tag") == "\\code" ||x != "\n", logical(1))
   Rd <- Rd[keep]
 
   cli_li("Common Tasks:")
@@ -113,7 +113,6 @@ Rd2tldr_details <- function(Rd) {
 
 # Deal with individual items in the details tag
 Rd2tldr_details_item <- function(Rd) {
-
   # Lots of cases, depends on Rd_tag:
   # Could add support for markup style `code`
   switch(attr(Rd, "Rd_tag"),
@@ -129,6 +128,17 @@ Rd2tldr_details_item_text <- function(Rd) {
 }
 
 Rd2tldr_details_item_code <- function(Rd) {
+  # Recursion for multi-line contents
+  if (length(Rd) > 1) {
+    len <- length(Rd)
+
+    # Trim surrounding newlines
+    if (Rd[[len]] == "\n") Rd[[len]] <- NULL
+    if (Rd[[1]] == "\n") Rd[[1]] <- NULL
+
+    return(lapply(Rd, Rd2tldr_details_item_code))
+  }
+
   Rd <- paste0("    ", Rd[[1]])
   cli_code(Rd)
 }
