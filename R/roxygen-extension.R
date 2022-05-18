@@ -298,7 +298,12 @@ roclet_clean.roclet_tldr <- function(x, base_path) {
 #' @method roclet_output roclet_tldr
 #' @export
 roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FALSE) {
+
+  if (!dir.exists(file.path(base_path, "inst", "tldr"))) dir.create(file.path(base_path, "inst", "tldr"), recursive = TRUE)
+
+  # Why normalizePath? For write_if_different()?
   man <- normalizePath(file.path(base_path, "inst", "tldr"))
+  normalizePath(file.path(here::here(), "inst", "tldr"))
   contents <- vapply(results, format, character(1))
 
   # Throw out entries w/ @ignoretldr tag

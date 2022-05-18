@@ -43,7 +43,20 @@ Rd2tldr_name <- function(Rd) {
 
 Rd2tldr_aliases <- function(Rd, type, package) {
   aliases <- unlist(Rd)
+
+  # Special handling for base objects w/ docs
+  if ("tldrDocs" %in% package)  {
+
+    # Want first element of find()
+    package <- vapply(aliases, function(x) rev(find(x))[1], character(1))
+
+    # First 8 characters are "package:"
+    package <- substring(package, 9)
+
+  }
+
   if (type == "function") aliases <- paste0(aliases, "()")
+
   aliases <- paste(package, aliases, sep = "::", collapse = ", ")
 
   cli_text(aliases)

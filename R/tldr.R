@@ -57,8 +57,10 @@ tldr_help <- function(topic, package) {
   package <- if (is.null(package)) tldr_package(topic) else package
   dir <- find.package(package)
 
-  Rd <- tldr_path(dir, topic)
-  Rd <- tools::parse_Rd(Rd)
+  Rd_path <- tldr_path(dir, topic)
+  if (!file.exists(Rd_path)) stop("Topic not found", call. = FALSE)
+
+  Rd <- tools::parse_Rd(Rd_path)
   Rd2tldr(Rd, package)
 }
 
@@ -66,7 +68,11 @@ tldr_package <- function(topic) {
   dirs <- find.package(loadedNamespaces())
   hits <- vapply(dirs, tldr_exists, logical(1), topic)
 
-  if (all(!hits)) stop("Topic not found")
+  # Look in tldrDocs as last resort
+  if (all(!hits)) {
+    return("tldrDocs")
+  }
+
   # Need a better way to pick the directory if multiple hits
   dir <- dirs[min(which(hits))]
 
