@@ -21,9 +21,9 @@ Rd2tldr <- function(Rd, package) {
   details <- if ("\\details" %in% top_level_tags) Rd[[which(top_level_tags == "\\details")]] else NULL
   format <- if ("\\format" %in% top_level_tags) Rd[[which(top_level_tags == "\\format")]] else NULL
 
-  Rd2tldr_name(name)
-  Rd2tldr_aliases(aliases, type, package)
+  # Rd2tldr_name(name)
   Rd2tldr_title(title)
+  Rd2tldr_aliases(aliases, type, package)
 
   if (!is.null(arguments)) Rd2tldr_arguments(arguments)
   if (!is.null(details)) Rd2tldr_details(details)
@@ -60,10 +60,12 @@ Rd2tldr_aliases <- function(Rd, type, package) {
   aliases <- paste(package, aliases, sep = "::", collapse = ", ")
 
   cli_text(aliases)
+  cli_text()
 }
 
 Rd2tldr_title <- function(Rd) {
-  cli_h2(Rd)
+  # cli_h2(Rd)
+  cli_h1(Rd)
 }
 
 
