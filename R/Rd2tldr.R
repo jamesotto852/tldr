@@ -92,7 +92,16 @@ Rd2tldr_arguments_item <- function(Rd) {
   arg <- Rd[[1]]
   desc <- Rd[[2]]
 
-  cli_li("{blue(arg)}: {desc}")
+  # Add spaces b/w commas in arg
+  arg <- gsub(",", ", ", arg)
+
+  # Allow for missing desc
+  if (length(desc) == 0) {
+    cli_li("{blue(arg)}")
+  } else {
+    cli_li("{blue(arg)}: {desc}")
+  }
+
 }
 
 
