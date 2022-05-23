@@ -8,6 +8,11 @@ Description: Input topic for `tldr()` documentation
 Binding: tldr_input_addin
 Interactive: true
 
+Name: tldr previous examples
+Description: Execute examples from previous `tldr()` call in console
+Binding: tldr_prev_examples_addin
+Interactive: false
+
 Name: tldr roxygenize
 Description: run `roxygen2::roxygenize(roclets = c("rd", "tldr_roclet", "namespace", "collate"))`
 Binding: tldr_roxygenize_addin
