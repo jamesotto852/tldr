@@ -133,6 +133,9 @@ Rd2tldr_details_item <- function(Rd) {
 
 # Deal with different types of tags for detail items:
 Rd2tldr_details_item_text <- function(Rd) {
+  # Spaces out examples
+  # Could look at global option (TLDR_SPACING)
+  cli_text()
   cli_li(Rd)
 }
 
@@ -154,6 +157,7 @@ Rd2tldr_details_item_code <- function(Rd) {
   Rd <- paste0("    ", Rd[[1]])
 
   cli_code(Rd)
+
 }
 
 
