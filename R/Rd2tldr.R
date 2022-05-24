@@ -137,18 +137,24 @@ Rd2tldr_details_item_text <- function(Rd) {
 }
 
 Rd2tldr_details_item_code <- function(Rd) {
-  # Recursion for multi-line contents
+
+  # collapse multi-line contents
   if (length(Rd) > 1) {
+
     len <- length(Rd)
 
     # Trim surrounding newlines
     if (Rd[[len]] == "\n") Rd[[len]] <- NULL
     if (Rd[[1]] == "\n") Rd[[1]] <- NULL
 
-    return(lapply(Rd, Rd2tldr_details_item_code))
+    Rd <- paste0(c("", unlist(Rd)), collapse = "    ")
+
+  } else {
+
+    Rd <- paste0("    ", Rd[[1]])
+
   }
 
-  Rd <- paste0("    ", Rd[[1]])
   cli_code(Rd)
 }
 
