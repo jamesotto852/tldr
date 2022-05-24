@@ -114,28 +114,32 @@ Rd2tldr_details <- function(Rd) {
 
   cli_li("Common Tasks:")
   ul <- cli_ul()
-  lapply(Rd, Rd2tldr_details_item)
+
+  # Special handling for first element, no extra linebreak
+  Rd2tldr_details_item(Rd[[1]], first = TRUE)
+
+  lapply(Rd[-1], Rd2tldr_details_item)
   cli_end(ul)
 
   cli_text()
 }
 
 # Deal with individual items in the details tag
-Rd2tldr_details_item <- function(Rd) {
+Rd2tldr_details_item <- function(Rd, first = FALSE) {
   # Lots of cases, depends on Rd_tag:
   # Could add support for markup style `code`
   switch(attr(Rd, "Rd_tag"),
-    "TEXT" = Rd2tldr_details_item_text(Rd),
+    "TEXT" = Rd2tldr_details_item_text(Rd, first = first),
     "\\code" = Rd2tldr_details_item_code(Rd),
   )
 
 }
 
 # Deal with different types of tags for detail items:
-Rd2tldr_details_item_text <- function(Rd) {
+Rd2tldr_details_item_text <- function(Rd, first = FALSE) {
   # Spaces out examples
   # Could look at global option (TLDR_SPACING)
-  cli_text()
+  if (!first) cli_text()
   cli_li(Rd)
 }
 
