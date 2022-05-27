@@ -20,6 +20,4 @@ RoxygenNote: 7.1.2
 Imports:
     cli,
     crayon,
-    rstudioapi,
-    shiny,
-    miniUI
+    rstudioapi

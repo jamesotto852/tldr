@@ -21,7 +21,7 @@ tldr_prev_examples_addin <- function() {
   # hist <- tail(hist, 2)[1]
   hist <- tail(hist, 1)[1]
 
-  if (!grepl("^tldr\\(", hist)) {
+  if (!grepl("^tldr(\\(|::tldr\\()", hist)) {
     # Error in extension is very messy
     # stop("Previous command wasn't of form tldr(fun)")
     return(invisible(NULL))
@@ -83,42 +83,15 @@ tldr_prev_examples_item <- function(line) {
   }
 }
 
-# Very bare-bones miniUI shiny app
-# To-Do: Theming, change size
 tldr_input_addin <- function() {
 
-  # check_installed(c("shiny", "miniUI"), "in order to use the shiny addin")
-
-  # js for:
-  #   setting focus on load
-  #   hitting done on enter key press
-  js <- '
-$(document).on("shiny:connected", function(){
-  document.getElementById("topic").focus();
-});
-$(document).keyup(function(event) {
-    if ((event.key == "Enter")) {
-        document.getElementById("done").click();
-    }
-});
-'
-
-  ui <- miniUI::miniPage(
-    tags$head(tags$script(shiny::HTML(js))),
-    miniUI::gadgetTitleBar("tldr"),
-    miniUI::miniContentPanel(
-      shiny::textInput("topic", "Topic", value = "", width = NULL, placeholder = NULL)
-    )
+  topic <- rstudioapi::showPrompt(
+    title = "Render tldr Documentation",
+    message = "Input topic:",
+    default = ""
   )
 
-  server <- function(input, output, session) {
-    shiny::observeEvent(input$done, {
-      rstudioapi::sendToConsole(paste0("tldr::tldr(", input$topic, ")"), execute = TRUE, focus = FALSE)
-      shiny::stopApp()
-    })
-  }
+  rstudioapi::sendToConsole(paste0("tldr::tldr(", topic, ")"), execute = TRUE, focus = FALSE)
 
-  app <- shiny::shinyApp(ui, server, options = list(quiet = TRUE))
-  shiny::runGadget(app, viewer = shiny::dialogViewer("tldr"))
 }
 
