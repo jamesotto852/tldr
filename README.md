@@ -1,9 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tldr
+# tldr <img src="man/figures/logo.png"  align="right"  width="120" style="padding-left:10px;background-color:white;" />
 
 <!-- badges: start -->
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/ggrrr)](https://cran.r-project.org/package=tldr)
+[![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](Redirect-URL)
 <!-- badges: end -->
 
 The goal of **tldr** is to provide short-form documentation in the
