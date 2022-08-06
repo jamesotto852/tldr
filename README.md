@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/ggrrr)](https://cran.r-project.org/package=tldr)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/tldr)](https://cran.r-project.org/package=tldr)
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](Redirect-URL)
 <!-- badges: end -->
 
