@@ -10,13 +10,11 @@
 #' \code{tldr('tldr')}
 #' \code{tldr(tldr::tldr)}
 #'
-#' @return
 #' @export
 #'
 #' @examples
 #' tldr(tldr)
 #' tldr("tldr")
-#' tldr(palmerpenguins::penguins)
 tldr <- function(topic) {
   topicExpr <- substitute(topic)
   package <- NULL

@@ -9,14 +9,10 @@ tldr(topic)
 \arguments{
 \item{topic}{A name or character string specifying documentation topic}
 }
-\value{
-
-}
 \description{
 Similar to \verb{?} and \code{help()}
 }
 \examples{
 tldr(tldr)
 tldr("tldr")
-tldr(palmerpenguins::penguins)
 }
