@@ -106,10 +106,10 @@ block_to_rd_tldr <- function (block, base_path, env) {
 #' @method block_to_rd_tldr roxy_block
 #' @export
 block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
-  block <- roxygen2:::process_templates(block, base_path)
+  block <- process_templates(block, base_path)
 
   # Check for cases in which no docs are required
-  if (!roxygen2:::needs_doc(block)) {
+  if (!needs_doc(block)) {
     return()
   }
   # if (any(vapply(block$tags, function(x) x$tag == "ignoretldr", logical(1)))) {
@@ -121,15 +121,15 @@ block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
     roxygen2::roxy_tag_warning(block$tags[[1]], "Missing name")
     return()
   }
-  rd <- roxygen2:::RoxyTopic$new()
-  roxygen2:::topic_add_name_aliases(rd, block, name)
+  rd <- RoxyTopic$new()
+  topic_add_name_aliases(rd, block, name)
   for (tag in block$tags) {
     if (!(tag$tag %in% c("name", "rdname", "aliases"))) rd$add(roxy_tag_rd_tldr(tag, env = env, base_path = base_path))
   }
   # Don't think the following 4 lines are necessary:
-  describe_rdname <- roxygen2:::topic_add_describe_in(rd, block, env)
+  describe_rdname <- topic_add_describe_in(rd, block, env)
   filename <- describe_rdname %||% roxygen2::block_get_tag(block, "rdname")$val %||%
-    roxygen2:::nice_name(name)
+    nice_name(name)
   rd$filename <- paste0(filename, ".Rd")
   rd
 }
@@ -253,7 +253,7 @@ tldr_roclet <- function() {
 #' @export
 roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
   results <- list()
-  topics <- roxygen2:::RoxyTopics$new()
+  topics <- RoxyTopics$new()
 
   for (block in blocks) {
 
@@ -288,7 +288,7 @@ roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
 roclet_clean.roclet_tldr <- function(x, base_path) {
   rd <- dir(file.path(base_path, "inst", "tldr"), full.names = TRUE)
   rd <- rd[!file.info(rd)$isdir]
-  unlink(purrr::keep(rd, roxygen2:::made_by_roxygen))
+  unlink(purrr::keep(rd, made_by_roxygen))
 }
 
 # Very similar to roxygen2:::roclet_output.roclet_rd
@@ -315,12 +315,12 @@ roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FAL
   aliases <- unlist(aliases)
 
   paths <- file.path(man, paste0(aliases, ".Rd", recycle0 = TRUE))
-  mapply(roxygen2:::write_if_different, paths, contents, MoreArgs = list(check = TRUE))
+  mapply(write_if_different, paths, contents, MoreArgs = list(check = TRUE))
 
   if (!is_first) {
     old_paths <- setdiff(dir(man, full.names = TRUE), paths)
     old_paths <- old_paths[!file.info(old_paths)$isdir]
-    old_roxygen <- Filter(roxygen2:::made_by_roxygen, old_paths)
+    old_roxygen <- Filter(made_by_roxygen, old_paths)
     if (length(old_roxygen) > 0) {
       message(paste0("Deleting ", basename(old_roxygen),
                      collapse = "\n"))
