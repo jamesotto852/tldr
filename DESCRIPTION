@@ -20,5 +20,8 @@ RoxygenNote: 7.2.1
 Imports:
     cli,
     crayon,
+    purrr (>= 0.3.3),
     rstudioapi,
-    roxygen2
+    roxygen2,
+    stringi,
+    utils
