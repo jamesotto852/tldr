@@ -8,3 +8,7 @@ topic_add_name_aliases <- get("topic_add_name_aliases", asNamespace("roxygen2"))
 write_if_different <- get("write_if_different", asNamespace("roxygen2"))
 process_templates <- get("process_templates", asNamespace("roxygen2"))
 needs_doc <- get("needs_doc", asNamespace("roxygen2"))
+
+"%||%" <- function(a, b) {
+  if (length(a) > 0) a else b
+}

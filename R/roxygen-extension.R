@@ -4,6 +4,7 @@
 #'
 #' @name tldr_roclet
 #' @rdname tldr_roclet
+#' @param ... Additional arguments
 #' @ignoretldr
 NULL
 # Right now, all files exported under same topic: "tldr_roclet"
@@ -12,15 +13,13 @@ NULL
 
 
 # Helper fun
-"%||%" <- function(a, b) {
-  if (length(a) > 0) a else b
-}
 
 
 
 # Special handling of tldr tags:
 # (just hand off non-tldr tags to roxygen2::roxy_tag_rd)
 #' @rdname tldr_roclet
+#' @inheritParams roxygen2::roxy_tag_rd
 #' @export
 roxy_tag_rd_tldr <- function(x, base_path, env) {
   if (grepl("tldr", x$tag)) {
@@ -96,6 +95,7 @@ roxy_tag_rd_tldr.roxy_tag_ignoretldr <- function(x, base_path, env) {
 
 # tldr version of roxygen2:::block_to_rd.roxy_block
 #' @rdname tldr_roclet
+#' @param block Roxygen block to parse to rd
 #' @export
 block_to_rd_tldr <- function (block, base_path, env) {
   UseMethod("block_to_rd_tldr")
@@ -103,7 +103,6 @@ block_to_rd_tldr <- function (block, base_path, env) {
 
 
 #' @rdname tldr_roclet
-#' @method block_to_rd_tldr roxy_block
 #' @export
 block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
   block <- process_templates(block, base_path)
@@ -248,6 +247,7 @@ tldr_roclet <- function() {
 
 # Very similar to roxygen2:::roclet_process.roclet_rd
 #' @rdname tldr_roclet
+#' @param blocks List of roxygen blocks
 #' @importFrom roxygen2 roclet_process
 #' @method roclet_process roclet_tldr
 #' @export
@@ -293,6 +293,8 @@ roclet_clean.roclet_tldr <- function(x, base_path) {
 
 # Very similar to roxygen2:::roclet_output.roclet_rd
 #' @rdname tldr_roclet
+#' @param results Rd code resulting from parsed roxygen blocks
+#' @param is_first Has roclet_output written files before
 #' @importFrom roxygen2 roclet_output
 #' @method roclet_output roclet_tldr
 #' @export
@@ -302,7 +304,6 @@ roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FAL
 
   # Why normalizePath? For write_if_different()?
   man <- normalizePath(file.path(base_path, "inst", "tldr"))
-  normalizePath(file.path(here::here(), "inst", "tldr"))
   contents <- vapply(results, format, character(1))
 
   # Throw out entries w/ @ignoretldr tag

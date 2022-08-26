@@ -72,6 +72,23 @@ tldr_roclet()
 
 \method{roclet_output}{roclet_tldr}(x, results, base_path, ..., is_first = FALSE)
 }
+\arguments{
+\item{x}{The tag}
+
+\item{base_path}{Path to package root directory.}
+
+\item{env}{Environment in which to evaluate code (if needed)}
+
+\item{block}{Roxygen block to parse to rd}
+
+\item{...}{Additional arguments}
+
+\item{blocks}{List of roxygen blocks}
+
+\item{results}{Rd code resulting from parsed roxygen blocks}
+
+\item{is_first}{Has roclet_output written files before}
+}
 \description{
 roxygen2 extension code facilitating documenting via roxygen2::roxygenize(roclets = c("tldr_roclet"))
 }
