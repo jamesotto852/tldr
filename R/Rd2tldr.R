@@ -48,7 +48,7 @@ Rd2tldr_aliases <- function(Rd, type, package) {
   if ("tldrDocs" %in% package)  {
 
     # Want first element of find()
-    package <- vapply(aliases, function(x) rev(find(x))[1], character(1))
+    package <- vapply(aliases, function(x) rev(utils::find(x))[1], character(1))
 
     # First 8 characters are "package:"
     package <- substring(package, 9)
