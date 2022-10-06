@@ -66,7 +66,7 @@ Once the package is installed, `tldr_help()` and `tldr_package()`
 are able to find the relevant files which are turned into console output by `tldr()`.
 
 This process is based on the `help()` function---for those who are interested, I have a 
-<a href="https://jamesotto852.github.io/Understanding-base-documentation-functions">blog post</a>
+<a href="https://jamesotto852.github.io/posts/Understanding-base-documentation-functions">blog post</a>
 in which I go through how `?` and `help()` work in detail.
 
 
