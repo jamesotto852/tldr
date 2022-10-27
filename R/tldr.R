@@ -38,7 +38,7 @@ tldr <- function(topic) {
   # Accept either name or string specifying topic
   topic <- if (is.name(topicExpr)) as.character(topicExpr) else topic
 
-  package <- if (is.null(package)) tldr_package(topic)
+  package <- if (is.null(package)) tldr_package(topic) else package
 
   invisible(eval(substitute(tldr_help(TOPIC, package = PACKAGE),
                          list(TOPIC = topic, PACKAGE = package))))
@@ -52,14 +52,30 @@ tldr_path <- function(path, topic) {
 
 
 tldr_help <- function(topic, package) {
-  package <- if (is.null(package)) tldr_package(topic) else package
-  dir <- find.package(package)
+  # Need original value of package for error message
+  package_parsed <- if (is.null(package)) tldr_package(topic) else package
+  dir <- find.package(package_parsed)
 
   Rd_path <- tldr_path(dir, topic)
-  if (!file.exists(Rd_path)) stop("Topic not found", call. = FALSE)
 
-  Rd <- tools::parse_Rd(Rd_path)
-  Rd2tldr(Rd, package)
+  if (file.exists(Rd_path)) {
+
+    Rd <- tools::parse_Rd(Rd_path)
+    Rd2tldr(Rd, package)
+
+  } else {
+
+    # Format input for cli
+    if (is.null(package) || package == "tldrDocs") {
+      input <- paste0("{.code ", topic, "}")
+    } else {
+      input <- paste0("{.fun ", package, "::", topic, "}")
+    }
+
+    cli_alert_danger(paste0("Topic not found (", input, ")"))
+    invisible(NULL)
+  }
+
 }
 
 tldr_package <- function(topic) {
