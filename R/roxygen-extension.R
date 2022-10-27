@@ -120,7 +120,7 @@ block_to_rd_tldr.roxy_block <- function (block, base_path, env) {
     roxygen2::roxy_tag_warning(block$tags[[1]], "Missing name")
     return()
   }
-  rd <- RoxyTopic$new()
+  rd <- RoxyTopic()$new()
   topic_add_name_aliases(rd, block, name)
   for (tag in block$tags) {
     if (!(tag$tag %in% c("name", "rdname", "aliases"))) rd$add(roxy_tag_rd_tldr(tag, env = env, base_path = base_path))
@@ -253,7 +253,7 @@ tldr_roclet <- function() {
 #' @export
 roclet_process.roclet_tldr <- function(x, blocks, env, base_path) {
   results <- list()
-  topics <- RoxyTopics$new()
+  topics <- RoxyTopics()$new()
 
   for (block in blocks) {
 
