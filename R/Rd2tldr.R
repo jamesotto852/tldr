@@ -1,5 +1,4 @@
 #' @import cli
-#' @importFrom crayon blue
 NULL
 
 # this script contains unexported functions which deal with
@@ -9,6 +8,10 @@ RdTags <- get("RdTags", asNamespace("tools"))
 
 
 Rd2tldr <- function(Rd, package) {
+
+  # TODO - allow user to define custom themes
+  cli_div(theme = list(span.name = list(color = "cyan", "font-weight" = "bold")))
+
   top_level_tags <- RdTags(Rd)
 
   type <- if ("\\docType" %in% top_level_tags) Rd[[which(top_level_tags == "\\docType")]] else "function"
@@ -38,6 +41,10 @@ Rd2tldr <- function(Rd, package) {
 ## deal with "header"
 
 Rd2tldr_name <- function(Rd) {
+  cli_h1(Rd)
+}
+
+Rd2tldr_title <- function(Rd) {
   cli_h1(Rd)
 }
 
@@ -97,9 +104,9 @@ Rd2tldr_arguments_item <- function(Rd) {
 
   # Allow for missing desc
   if (length(desc) == 0) {
-    cli_li("{blue(arg)}")
+    cli_li("{.name {arg}}")
   } else {
-    cli_li("{blue(arg)}: {desc}")
+    cli_li("{.name {arg}}: {desc}")
   }
 
 }
@@ -109,7 +116,7 @@ Rd2tldr_arguments_item <- function(Rd) {
 Rd2tldr_details <- function(Rd) {
   # Only want \\code + non-newline elements
   # Mild abuse of short-circuit
-  keep <- vapply(Rd, function(x) attr(x, "Rd_tag") == "\\code" ||x != "\n", logical(1))
+  keep <- vapply(Rd, function(x) attr(x, "Rd_tag") == "\\code" || x != "\n", logical(1))
   Rd <- Rd[keep]
 
   cli_li("Common Tasks:")
@@ -209,7 +216,7 @@ Rd2tldr_format_item <- function(Rd) {
   item <- Rd[[1]]
   desc <- Rd[[2]]
 
-  cli_li("{blue(item)}: {desc}")
+  cli_li("{.name {item}}: {desc}")
 }
 
 
