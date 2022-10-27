@@ -62,18 +62,21 @@ Rd2tldr_aliases <- function(Rd, type, package) {
 
   }
 
-  if (type == "function" & package[1] != "datasets") aliases <- paste0(aliases, "()")
+  # TODO: add global option to disable hyperlinks
+  if (type == "function" & package[1] != "datasets") {
+    aliases <- paste0("{.fun ", package, "::", aliases, "}", collapse = ", ")
+  } else {
+    aliases <- paste(package, aliases, sep = "::", collapse = ", ")
+  }
 
-
-  aliases <- paste(package, aliases, sep = "::", collapse = ", ")
+  # TODO: Below code is broken -- {.topic XXXX} doesn't always work for datasets
+  if (FALSE) {
+    class <- if (type == "function" & package[1] != "datasets") "{.fun " else "{.topic "
+    aliases <- paste0(class, package, "::", aliases, "}", collapse = ", ")
+  }
 
   cli_text(aliases)
   cli_text()
-}
-
-Rd2tldr_title <- function(Rd) {
-  # cli_h2(Rd)
-  cli_h1(Rd)
 }
 
 
