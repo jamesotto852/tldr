@@ -52,8 +52,15 @@ tldr_path <- function(path, topic) {
 
 
 tldr_help <- function(topic, package) {
+
   # Need original value of package for error message
   package_parsed <- if (is.null(package)) tldr_package(topic) else package
+
+  # If package is a base package, need to instead look at tldrDocs:
+  if (package_parsed %in% c("base", "methods", "datasets", "utils", "grDevices", "graphics", "stats")) {
+    package_parsed <- "tldrDocs"
+  }
+
   dir <- find.package(package_parsed)
 
   Rd_path <- tldr_path(dir, topic)
@@ -74,6 +81,7 @@ tldr_help <- function(topic, package) {
 
     cli_alert_danger(paste0("Topic not found (", input, ")"))
     invisible(NULL)
+
   }
 
 }
