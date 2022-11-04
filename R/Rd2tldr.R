@@ -64,7 +64,14 @@ Rd2tldr_aliases <- function(Rd, type, package) {
 
   # TODO: add global option to disable hyperlinks
   if (type == "function" & package[1] != "datasets") {
-    aliases <- paste0("{.fun ", package, "::", aliases, "}", collapse = ", ")
+
+    # Only want links for functions w/ non-special names:
+    special <- grepl("[^a-zA-Z0-9\\._]", aliases)
+    aliases[special] <- paste0(package[special], "::`", aliases[special], "`()")
+    aliases[!special] <- paste0("{.fun ", package[!special], "::", aliases[!special], "}")
+
+    aliases <- paste0(aliases, collapse = ", ")
+
   } else {
     aliases <- paste(package, aliases, sep = "::", collapse = ", ")
   }

@@ -47,6 +47,10 @@ tldr <- function(topic) {
 tldr_path <- function(path, topic) {
   # looking in PKG/tldr/ for files w/ the name topic.Rd
   # Before package installation, they hang out in /inst/tldr/
+
+  # Hash topic if there are special characters
+  topic <- tldr_encode(topic)
+
   file.path(path, "tldr", paste0(topic, ".Rd"))
 }
 
@@ -102,3 +106,19 @@ tldr_package <- function(topic) {
 }
 
 tldr_exists <- function(path, topic) file.exists(tldr_path(path, topic))
+
+
+# If there are special characters topic needs to be hashed
+tldr_encode <- function(topic) {
+  # Remove escape characters from .Rd code:
+  topic <- gsub("\\\\", "", topic)
+
+  special <- grepl("[^a-zA-Z0-9\\._]", topic)
+  topic[special] <- vapply(topic[special], digest::digest, character(1), algo = "md5")
+  topic[special] <- paste0("tldr_", topic[special])
+
+  topic
+}
+
+
+

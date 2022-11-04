@@ -315,6 +315,9 @@ roclet_output.roclet_tldr <- function(x, results, base_path, ..., is_first = FAL
   contents <- rep(contents, aliases_count)
   aliases <- unlist(aliases)
 
+  # Hash topic if there are special characters
+  aliases <- tldr_encode(aliases)
+
   paths <- file.path(man, paste0(aliases, ".Rd", recycle0 = TRUE))
   mapply(write_if_different, paths, contents, MoreArgs = list(check = TRUE))
 
