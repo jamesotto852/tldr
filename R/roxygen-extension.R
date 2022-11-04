@@ -183,7 +183,7 @@ roxy_tag_parse.roxy_tag_exampletldr <- function(x) {
   #   desc = desc
   # )
 
-  x$val <- x$raw
+  x$val <- escapeExamples(x$raw)
 
   x
 }

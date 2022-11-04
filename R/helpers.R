@@ -38,6 +38,10 @@ needs_doc <- function(...) {
   asNamespace("roxygen2")$needs_doc(...)
 }
 
+escapeExamples <- function(...) {
+  asNamespace("roxygen2")$escapeExamples(...)
+}
+
 RoxyTopic <- function() {
   asNamespace("roxygen2")$RoxyTopic
 }
