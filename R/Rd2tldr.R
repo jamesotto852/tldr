@@ -116,7 +116,11 @@ Rd2tldr_arguments_item <- function(Rd) {
   if (length(desc) == 0) {
     cli_li("{.name {arg}}")
   } else {
-    cli_li("{.name {arg}}: {desc}")
+    # Markup for descriptions
+    desc <- Rd2tldr_TEXT_markup(desc)
+    desc <- combine_run(desc)
+
+    cli_li(paste0("{.name ", arg, "}: ", desc))
   }
 
 }
@@ -124,10 +128,15 @@ Rd2tldr_arguments_item <- function(Rd) {
 
 ## deal with details tag
 Rd2tldr_details <- function(Rd) {
-  # Only want \\code + non-newline elements
+
+  # Only want \\code + non-newline elements (suffices to check first element)
   # Mild abuse of short-circuit
-  keep <- vapply(Rd, function(x) attr(x, "Rd_tag") == "\\code" || x != "\n", logical(1))
-  Rd <- Rd[keep]
+  Rd <- Filter(function(x) attr(x[1], "Rd_tag") == "\\code" || x[1] != "\n", Rd)
+
+  # Format + combine links and text:
+  Rd <- Rd2tldr_TEXT_markup(Rd)
+  Rd <- combine_run(Rd)
+
 
   cli_li("Common Tasks:")
   ul <- cli_ul()
@@ -143,20 +152,23 @@ Rd2tldr_details <- function(Rd) {
 
 # Deal with individual items in the details tag
 Rd2tldr_details_item <- function(Rd, first = FALSE) {
-  # Lots of cases, depends on Rd_tag:
-  # Could add support for markup style `code`
+
+  # Sometimes this is missing:
+  if (is.null(attr(Rd, "Rd_tag"))) attr(Rd, "Rd_tag") <- "TEXT"
+
   switch(attr(Rd, "Rd_tag"),
     "TEXT" = Rd2tldr_details_item_text(Rd, first = first),
-    "\\code" = Rd2tldr_details_item_code(Rd),
+    "RCODE" = Rd2tldr_details_item_code(Rd),
+    "\\code" = Rd2tldr_details_item_code(Rd)
   )
 
 }
 
-# Deal with different types of tags for detail items:
 Rd2tldr_details_item_text <- function(Rd, first = FALSE) {
   # Spaces out examples
   # Could look at global option (TLDR_SPACING)
   if (!first) cli_text()
+
   cli_li(Rd)
 }
 
@@ -181,6 +193,94 @@ Rd2tldr_details_item_code <- function(Rd) {
 
 }
 
+
+# deal with LaTeX style markup
+Rd2tldr_TEXT_markup <- function(Rd) {
+
+  lapply(Rd, Rd2tldr_TEXT_markup_item)
+
+}
+
+Rd2tldr_TEXT_markup_item <- function(Rd) {
+
+  if (attr(Rd, "Rd_tag") %in% c("\\code", "TEXT")) return(Rd)
+
+  res <- switch(attr(Rd, "Rd_tag"),
+    "\\link" = Rd2tldr_TEXT_markup_item_link(Rd),
+    "\\dfn" = Rd2tldr_TEXT_markup_item_dfn(Rd), # Direct link to FuNction (no derefence)
+    "\\file" = Rd2tldr_TEXT_markup_item_file(Rd), # vignettes
+    "\\href" = Rd2tldr_TEXT_markup_item_href(Rd),
+    "\\url" = Rd2tldr_TEXT_markup_item_url(Rd),
+    "\\emph" = Rd2tldr_TEXT_markup_item_emph(Rd),
+    "\\bold" = Rd2tldr_TEXT_markup_item_bold(Rd)
+  )
+
+  attr(res, "Rd_tag") <- "TEXT"
+
+  res
+
+}
+
+
+Rd2tldr_TEXT_markup_item_link <- function(Rd) {
+  paste0("{.fun ", Rd, "}")
+}
+
+Rd2tldr_TEXT_markup_item_dfn <- function(Rd) {
+  pkg <- strsplit(Rd[[1]], "::")[[1]][1]
+  fn <- strsplit(Rd[[1]], "::")[[1]][2]
+
+  paste0("{.help [{.fun ", fn, "}](", pkg, "::", fn, ")}")
+}
+
+Rd2tldr_TEXT_markup_item_file <- function(Rd) {
+  # TODO .vignette from cli seems to fail with hyphenated vignette titles
+  paste0("{.vignette ", Rd, "}")
+}
+
+Rd2tldr_TEXT_markup_item_href <- function(Rd) {
+  paste0("{.href [", Rd[[2]], "](", Rd[[1]], ")}")
+}
+
+Rd2tldr_TEXT_markup_item_url <- function(Rd) {
+  paste0("{.url ", Rd, "}")
+}
+
+Rd2tldr_TEXT_markup_item_emph <- function(Rd) {
+  paste0("{.emph ", Rd, "}")
+}
+
+Rd2tldr_TEXT_markup_item_bold <- function(Rd) {
+  paste0("{.strong ", Rd, "}")
+}
+
+
+combine_run <- function(Rd) {
+
+  if (length(Rd) <= 1) return(Rd)
+
+  # initialize out list; p = length of out
+  out <- Rd[1]; p <- 1L
+
+  # iterate over elements of Rd, growing out
+  for (i in seq_along(Rd)[-1]) {
+
+    ce <- Rd[[i]]   # current element
+    le <- Rd[[i-1]] # last element
+
+    # update depending on whether current elt and last were characters,
+    # if not, grow the list
+    if (attr(ce, "Rd_tag") %in% c("TEXT", "\\link") && attr(le, "Rd_tag") %in% c("TEXT", "\\link")) {
+      out[[p]] <- paste0(out[[p]], ce)
+      attr(out[[p]], "Rd_tag") <- "TEXT"
+    } else {
+      out <- c(out, ce)
+      p <- p + 1L
+    }
+  }
+
+  out
+}
 
 
 ## deal with format tag

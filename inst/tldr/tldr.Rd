@@ -8,7 +8,7 @@
 }
 
 \details{
-Several ways to bring up documentation on a topic:
+Several ways to bring up documentation on \dfn{tldr::tldr}:
 \code{tldr(tldr)}
 \code{tldr('tldr')}
 \code{tldr(tldr::tldr)}
