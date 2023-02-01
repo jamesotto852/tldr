@@ -58,7 +58,7 @@ Rd2tldr_aliases <- function(Rd, type, package) {
     package <- vapply(aliases, function(x) rev(utils::find(x))[1], character(1))
 
     # First 8 characters are "package:"
-    package <- substring(package, 9)
+    package <- substring(package, 9)[1]
 
   }
 
