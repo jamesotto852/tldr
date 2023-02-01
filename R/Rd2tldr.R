@@ -67,8 +67,8 @@ Rd2tldr_aliases <- function(Rd, type, package) {
 
     # Only want links for functions w/ non-special names:
     special <- grepl("[^a-zA-Z0-9\\._]", aliases)
-    aliases[special] <- paste0(package[special], "::`", aliases[special], "`()")
-    aliases[!special] <- paste0("{.fun ", package[!special], "::", aliases[!special], "}")
+    aliases[special] <- paste0(package, "::`", aliases[special], "`()")
+    aliases[!special] <- paste0("{.fun ", package, "::", aliases[!special], "}")
 
     aliases <- paste0(aliases, collapse = ", ")
 
