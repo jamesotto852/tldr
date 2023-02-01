@@ -129,9 +129,10 @@ Rd2tldr_arguments_item <- function(Rd) {
 ## deal with details tag
 Rd2tldr_details <- function(Rd) {
 
-  # Only want \\code + non-newline elements (suffices to check first element)
-  # Mild abuse of short-circuit
-  Rd <- Filter(function(x) attr(x[1], "Rd_tag") == "\\code" || x[1] != "\n", Rd)
+  # Only want \\code + non-newline elements, or elements with length > 1.
+  # Mild abuse of short-circuit to allow for logical comparisons
+  # (some possible incompatible lengths / types)
+  Rd <- Filter(function(x) length(x) > 1 || attr(x, "Rd_tag") == "\\code" || x != "\n", Rd)
 
   # Format + combine links and text:
   Rd <- Rd2tldr_TEXT_markup(Rd)
@@ -140,6 +141,7 @@ Rd2tldr_details <- function(Rd) {
 
   cli_li("Common Tasks:")
   ul <- cli_ul()
+
 
   # Special handling for first element, no extra linebreak
   Rd2tldr_details_item(Rd[[1]], first = TRUE)
@@ -274,8 +276,8 @@ combine_run <- function(Rd) {
       out[[p]] <- paste0(out[[p]], ce)
       attr(out[[p]], "Rd_tag") <- "TEXT"
     } else {
-      out <- c(out, ce)
       p <- p + 1L
+      out[[p]] <- ce
     }
   }
 
