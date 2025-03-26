@@ -4,7 +4,7 @@
 #' providing the `tldr()` function for users and the roxygen2 extension
 #' `tldr-roclet` for package developers.
 #'
-#' @docType package
-#' @name tldr-package
+#' @name tldr
+#' @aliases tldr tldr-package
 #' @ignoretldr
 NULL
